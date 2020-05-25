@@ -1,0 +1,23 @@
+version: '3'
+services:
+  db:
+    image: 'mariadb'
+    container_name: 'flox-db'
+    environment:
+      - MYSQL_ROOT_PASSWORD=mysqlDefaultRootPassword
+      - MYSQL_DATABASE=floxDatabase
+      - MYSQL_USER=flox
+      - MYSQL_PASSWORD=floxDefaultPassword
+    volumes:
+      - ${PWD}/mariadb:/var/lib/mysql
+  flox-back:
+    image: composer:1.9
+    container_name: 'flox-back'
+    links:
+      - "db:database"
+  flox-front:
+    image: nginx:1.18
+    depends_on:
+      - flox-back
+    ports:
+      - "80:80"
